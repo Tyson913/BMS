@@ -14,13 +14,25 @@ class BMS:
         signedUpUsername = input("Enter your desired username: ")
         return signedUpUsername
 
-        
+    def SPUsernameisValid(self, signedUpUsername):
+        if len(signedUpUsername) >= 6:
+            return True
+        return False
+    
 def main():
     # Created a temporary instance for the BMS
     bms = BMS(accounts=True, balance=True)
-    
+
     # Declared the getSPUsername function inside the class
-    bms.getSPUsername()
+    signedUpUsername = bms.getSPUsername()
+
+    if bms.SPUsernameisValid(signedUpUsername):
+        print("The password is valid")
+    else:
+        print("Invalid Password. Password should have atleast 6 characters")
+
+
+
 
 
 if __name__ == "__main__":
