@@ -11,17 +11,30 @@ class BMS:
     
     # Made a function for getting the signed up username of the user
     def getSPUsername(self):
-        signedUpUsername = input("Enter your desired username: ")
-        return signedUpUsername
+        SPUsername = input("Enter your desired username: ")
+        return SPUsername
+    
+    def getSPPassword(self):
+        SPPassword = input("Enter a password: ")
+        SPPasswordConfirmation = input("Confirm your password: ")
 
-        
+    def SPUsernameisValid(self, signedUpUsername):
+        if len(signedUpUsername) >= 6:
+            return True
+        return False
+
+
 def main():
     # Created a temporary instance for the BMS
     bms = BMS(accounts=True, balance=True)
-    
-    # Declared the getSPUsername function inside the class
-    bms.getSPUsername()
 
+    # Declared the getSPUsername function inside the class
+    signedUpUsername = bms.getSPUsername()
+
+    if bms.SPUsernameisValid(signedUpUsername):
+        print("The password is valid")
+    else:
+        print("Invalid Password. Password should have atleast 6 characters")
 
 if __name__ == "__main__":
     main()
