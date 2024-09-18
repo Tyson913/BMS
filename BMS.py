@@ -3,6 +3,8 @@
 # SP = Sign Up
 # LN = Log In
 
+import json
+
 class BMS: # Bank Management System Object
     # Initiallize the BMS
     def __init__(self, accounts, balance):
@@ -11,7 +13,7 @@ class BMS: # Bank Management System Object
     
     # Made a function for getting the chosen user auth of the user (Log In and Sign Up)
     def getUserAuth(self):
-        print("1. Log In\n2. Sign Up")
+        print("1. Sign Up\n2. Log In")
         chosenUserAuth = int(input("Enter a number: "))
 
         return chosenUserAuth
@@ -42,7 +44,7 @@ class BMS: # Bank Management System Object
     
     # Function to print out the offered services
     def Services(self):
-        Services = """
+        Services = '''
             ======================================
             ||             Services             ||
             ======================================
@@ -52,11 +54,23 @@ class BMS: # Bank Management System Object
             ||      4. Transaction History      ||
             ======================================
 
-        """
+        '''
         print(Services)
         return None
+    
+    def addAcc(self, SPUsername, SPPassword):
+        self.accounts = []
+        account = {
+            "username": SPUsername,
+            "password": SPPassword
+        }
 
-    # Functions for Log In Auth here...
+        self.accounts.append(account)
+
+        with open('BMS.json', 'w') as file:
+            json.dump(self.accounts,file)
+
+
 
 def main():
     print(" ")
@@ -64,15 +78,16 @@ def main():
     bms = BMS(accounts=True, balance=True)
 
     # Collected the username of the user inside the getSPUsername function inside the class
-    SPUsername = bms.getSPUsername()
 
     while True:
-        
-        if bms.getUserAuth() == 1: # if the chosen user auth is 1 then perform the username validation
+        if bms.getUserAuth() == 1:
+            SPUsername = bms.getSPUsername() # if the chosen user auth is 1 then perform the username validation
             if bms.SPUsernameisValid(SPUsername): # if the SPUsername is valid, the getSPPassword will be executed
                 SPPassword, SPPasswordConfirmation = bms.getSPPassword() # Get the values of the variables SPPassword and SPPasswordConfirmation
                 if bms.SPPasswordisValid(SPPassword, SPPasswordConfirmation): # if the password created by the user is valid, then the function Services will be executed
+                    bms.addAcc(SPUsername, SPPassword)
                     bms.Services()
+
                     break
                 break
             break
