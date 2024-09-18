@@ -9,7 +9,7 @@ class BMS: # Bank Management System Object
         self.accounts = accounts
         self.balance = balance
     
-    # Made a function for getting the chosen user auth of the user
+    # Made a function for getting the chosen user auth of the user (Log In and Sign Up)
     def getUserAuth(self):
         print("1. Log In\n2. Sign Up")
         chosenUserAuth = int(input("Enter a number: "))
