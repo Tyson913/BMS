@@ -58,11 +58,17 @@ class BMS: # Bank Management System Object
         print(Services)
         return None
     
+    def SPAccountisValid(self, SPUsername, SPPassword):
+        with open('BMS.json', 'r') as file:
+            data = json.load(file)
+
+        return SPUsername != data["username"] and SPPassword != data["password"]
+
     def addAcc(self, SPUsername, SPPassword):
         self.accounts = []
         account = {
             "username": SPUsername,
-            "password": SPPassword
+            "password": SPPassword 
         }
 
         self.accounts.append(account)
@@ -78,11 +84,14 @@ def main():
     bms = BMS(accounts=True, balance=True)
 
     # Collected the username of the user inside the getSPUsername function inside the class
-    while bms.getUserAuth() != 1 and bms.getUserAuth() != 2:
-        print("Please enter a valid number.")
+    chosenUserAuth = bms.getUserAuth()
+   
+    while chosenUserAuth != 1 and chosenUserAuth != 2:
+        print("Invalid input. Please enter a valid number for user authentication.")
         bms.getUserAuth()
+        print(' ')
     while True:
-        if bms.getUserAuth() == 1:
+        if  chosenUserAuth == 1:
             SPUsername = bms.getSPUsername() # if the chosen user auth is 1 then perform the username validation
             if bms.SPUsernameisValid(SPUsername): # if the SPUsername is valid, the getSPPassword will be executed
                 SPPassword, SPPasswordConfirmation = bms.getSPPassword() # Get the values of the variables SPPassword and SPPasswordConfirmation
@@ -90,9 +99,8 @@ def main():
                     bms.addAcc(SPUsername, SPPassword)
                     bms.Services()
                     break
-                
             break
-        elif bms.getUserAuth() == 2:
+        elif chosenUserAuth == 2:
 
 
             # Code for the log In user auth here
