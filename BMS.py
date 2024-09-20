@@ -56,7 +56,9 @@ class BMS: # Bank Management System Object
 
         '''
         print(Services)
-        return None
+        chosen_service = input("Enter the number of the service you'd like: ")
+        return chosen_service
+
     
     def SPAccountisValid(self, SPUsername, SPPassword):
         with open('BMS.json', 'r') as file:
@@ -76,7 +78,20 @@ class BMS: # Bank Management System Object
         with open('BMS.json', 'w') as file:
             json.dump(self.accounts,file)
 
+    def getLN(self):
+        LNusername = input("Username: ")
+        LNpassword = input("Password: ")
 
+        return LNusername, LNpassword
+    
+    def LNisValid(self,LNusername, LNpassword):
+        with open('BMS.json', 'r') as file:
+            data = json.load(file)
+
+        for acc in data:
+            if acc.get["username"] == LNusername and acc.get["password"] == LNpassword:
+                return True
+            return False
 
 def main():
     print(" ")
@@ -90,22 +105,46 @@ def main():
         print("Invalid input. Please enter a valid number for user authentication.")
         bms.getUserAuth()
         print(' ')
+    
     while True:
-        if  chosenUserAuth == 1:
-            SPUsername = bms.getSPUsername() # if the chosen user auth is 1 then perform the username validation
-            if bms.SPUsernameisValid(SPUsername): # if the SPUsername is valid, the getSPPassword will be executed
-                SPPassword, SPPasswordConfirmation = bms.getSPPassword() # Get the values of the variables SPPassword and SPPasswordConfirmation
-                if bms.SPPasswordisValid(SPPassword, SPPasswordConfirmation): # if the password created by the user is valid, then the function Services will be executed
-                    bms.addAcc(SPUsername, SPPassword)
-                    bms.Services()
-                    break
-            break
-        elif chosenUserAuth == 2:
+        match chosenUserAuth:
+            case 1:
+                SPUsername = bms.getSPUsername()
+                if bms.SPUsernameisValid(SPUsername):
+                    while True:
+                        SPPassword, SPPasswordConfirmation = bms.getSPPassword()
+                        if bms.SPPasswordisValid(SPPassword,SPPasswordConfirmation):
+                            chosen_service = bms.Services()
+                            match chosen_service:
+                                case 1:
+                                    print("You chose the deposit service")
+                                case 2:
+                                    print("You chose the transfer service")
+                                case 3:
+                                    print("You chose the withdraw service")
+                                case 4:
+                                    print("You chose to view your transaction history")
+                        else:
+                            continue
+                else:
+                    continue
+            case 2:
+                LNusername, LNpassword = bms.getLN()
+                if bms.LNisValid(LNusername, LNpassword):
+                    chosen_service = bms.Services()
 
-
-            # Code for the log In user auth here
-            break # Temporary code to avoid error
-
-
+                    match chosen_service:
+                        case 1:
+                            print("You chose the deposit service")
+                        case 2:
+                            print("You chose the transfer service")
+                        case 3:
+                            print("You chose the withdraw service")
+                        case 4:
+                            print("You chose to view your transaction history")
+                else:
+                    print("Account doesn't exist.")
+                    continue
+ 
 if __name__ == "__main__":
     main()
