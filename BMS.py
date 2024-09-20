@@ -3,7 +3,9 @@
 # SP = Sign Up
 # LN = Log In
 
+
 import json
+import random
 
 class BMS: # Bank Management System Object
     # Initiallize the BMS
@@ -29,6 +31,18 @@ class BMS: # Bank Management System Object
         SPPasswordConfirmation = input("Confirm your password: ")
 
         return SPPassword, SPPasswordConfirmation
+
+    def AccIdGenerator(self):
+        random10letters = ''.join(random.choices(string.ascii_uppercase, k=3))
+
+        num_of_randoms = 4
+
+        random_numbers = [random.randint(1, 9) for _ in range(num_of_randoms)]  # Change the range as needed
+
+        second = ''.join(map(str, random_numbers))
+
+        print(f"Transaction ID: {random10letters}{second}")
+        return None
 
     # Function for the validation of Signed Up Username of the user
     def SPUsernameisValid(self, SPusername):
@@ -64,13 +78,17 @@ class BMS: # Bank Management System Object
         with open('BMS.json', 'r') as file:
             data = json.load(file)
 
-        return SPUsername != data["username"] and SPPassword != data["password"]
+        for acc in data:
+            if acc.get["username"] != SPUsername and acc.get["password"] != SPPassword:
+                return True
+            return False
 
-    def addAcc(self, SPUsername, SPPassword):
-        self.accounts = []
+    def addAcc(self, SPUsername, SPPassword, SPID):
+        self.accounts = ["\n"]
         account = {
             "username": SPUsername,
-            "password": SPPassword 
+            "password": SPPassword,
+            "id": SPID
         }
 
         self.accounts.append(account)
@@ -92,11 +110,38 @@ class BMS: # Bank Management System Object
             if acc.get["username"] == LNusername and acc.get["password"] == LNpassword:
                 return True
             return False
+        
+    def chosenServiceHandler(chosen_service):
+        match chosen_service:
+            case 1:
+                print("You chose the deposit service")
+            case 2:
+                print("You chose the transfer service")
+            case 3:
+                print("You chose the withdraw service")
+            case 4:
+                print("You chose to view your transaction history")
+        
+        return None
+    
+    def getDepositMoney(self):
+        money_to_deposit = int(input("Enter an amount to deposit: "))
+
+        return money_to_deposit
+
+    def deposit(self, money_to_deposit):
+        return self.balance + money_to_deposit
+    
+    def getRecipientAcc(self):
+        acc_username = str(input("Enter the recipient's username: "))
+        return acc_username
+        
+
 
 def main():
     print(" ")
     # Created a temporary instance for the BMS
-    bms = BMS(accounts=True, balance=True)
+    bms = BMS(balance=0)
 
     # Collected the username of the user inside the getSPUsername function inside the class
     chosenUserAuth = bms.getUserAuth()
@@ -115,15 +160,7 @@ def main():
                         SPPassword, SPPasswordConfirmation = bms.getSPPassword()
                         if bms.SPPasswordisValid(SPPassword,SPPasswordConfirmation):
                             chosen_service = bms.Services()
-                            match chosen_service:
-                                case 1:
-                                    print("You chose the deposit service")
-                                case 2:
-                                    print("You chose the transfer service")
-                                case 3:
-                                    print("You chose the withdraw service")
-                                case 4:
-                                    print("You chose to view your transaction history")
+                        #    bms.AccIdGenerator(chosen_service)                       
                         else:
                             continue
                 else:
@@ -132,16 +169,7 @@ def main():
                 LNusername, LNpassword = bms.getLN()
                 if bms.LNisValid(LNusername, LNpassword):
                     chosen_service = bms.Services()
-
-                    match chosen_service:
-                        case 1:
-                            print("You chose the deposit service")
-                        case 2:
-                            print("You chose the transfer service")
-                        case 3:
-                            print("You chose the withdraw service")
-                        case 4:
-                            print("You chose to view your transaction history")
+                   # bms.AccIdGenerator(chosen_service)
                 else:
                     print("Account doesn't exist.")
                     continue
